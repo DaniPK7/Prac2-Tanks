@@ -22,6 +22,7 @@ public class TankMovement : MonoBehaviour
 
     public float slowAc =0f;
     public float fric=5f;
+    public string LastInput;
 
 
     private void Awake()
@@ -66,7 +67,9 @@ public class TankMovement : MonoBehaviour
         //pruebas
         if (Input.GetKey(KeyCode.K)) { THScript.TakeDamage(2f); }
 
-        if (PressingWorS()) { print("Pulso S o W"); }
+        //if (Input.GetKey(KeyCode.W)) { movement = transform.forward * 1 * slowAc * Time.deltaTime; }
+        if (Input.GetKey(KeyCode.S)) { LastInput="S"; }
+        if (Input.GetKey(KeyCode.W)) { LastInput="W"; }
     }
 
 
@@ -116,15 +119,34 @@ public class TankMovement : MonoBehaviour
         }
         else 
         {
-            if (slowAc>=0.05f)
+            if (LastInput == "W")
             {
-                slowAc -= fric;
-                if (slowAc < 0)
+                if (slowAc >= 0.05f)
                 {
-                    slowAc = 0f;
+                    slowAc -= fric;
+                    if (slowAc < 0)
+                    {
+                        slowAc = 0f;
+                    }
+
                 }
             }
-            
+
+            if (LastInput == "S")
+            {
+                slowAc= -1 * Mathf.Abs(slowAc); 
+                if (slowAc <= -0.05f)
+                {
+                    slowAc += fric;
+                    if (slowAc > 0)
+                    {
+                        slowAc = 0f;
+                    }
+
+                }
+            }
+
+
 
             movement = transform.forward * slowAc * Time.deltaTime;
 
