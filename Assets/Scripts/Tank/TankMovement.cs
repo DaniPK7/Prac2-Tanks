@@ -20,6 +20,9 @@ public class TankMovement : MonoBehaviour
 
     TankHealth THScript;
 
+    public float slowAc =0f;
+    public float fric=5f;
+
 
     private void Awake()
     {
@@ -61,7 +64,9 @@ public class TankMovement : MonoBehaviour
         EngineAudio();
 
         //pruebas
-        if (Input.GetKey(KeyCode.Keypad0)) { THScript.TakeDamage(2f); }
+        if (Input.GetKey(KeyCode.K)) { THScript.TakeDamage(2f); }
+
+        if (PressingWorS()) { print("Pulso S o W"); }
     }
 
 
@@ -94,15 +99,43 @@ public class TankMovement : MonoBehaviour
     {
         // Move and turn the tank.
         Move();
+        
+        
         Turn();
     }
 
 
     private void Move()
     {
-        // Adjust the position of the tank based on the player's input.
-        Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
+        Vector3 movement = new Vector3();
+        if(PressingWorS()) 
+        { 
+            slowAc = m_Speed;
+
+            movement = transform.forward * m_MovementInputValue * slowAc * Time.deltaTime;
+        }
+        else 
+        {
+            if (slowAc>=0.05f)
+            {
+                slowAc -= fric;
+                if (slowAc < 0)
+                {
+                    slowAc = 0f;
+                }
+            }
+            
+
+            movement = transform.forward * slowAc * Time.deltaTime;
+
+        }
+        //movement = transform.forward * m_MovementInputValue * slowAc * Time.deltaTime;
+    
+        // Adjust the position of the tank based on the player's input.      
+        
+
         m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+
     }
 
 
@@ -113,5 +146,12 @@ public class TankMovement : MonoBehaviour
         Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
 
         m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
+    }
+
+    bool PressingWorS()
+    {
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)) { return true; }
+        else return false;
     }
 }
