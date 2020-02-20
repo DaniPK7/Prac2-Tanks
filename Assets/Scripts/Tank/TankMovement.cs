@@ -24,6 +24,8 @@ public class TankMovement : MonoBehaviour
     public float fric=5f;
     public string LastInput;
 
+    
+
 
     private void Awake()
     {
@@ -175,5 +177,10 @@ public class TankMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)) { return true; }
         else return false;
+    }
+
+    void rayo()
+    {
+
     }
 }
