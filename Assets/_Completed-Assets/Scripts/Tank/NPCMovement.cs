@@ -1,9 +1,152 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 namespace Complete
 {
-    public class TankMovement : MonoBehaviour
+    public class NPCMovement : MonoBehaviour
     {
+        Transform closestTank;
+        public Transform[] players;               // Reference to the player's position.
+        //TankHealth [] playerHealth;      // Reference to the player's health.
+        NPCHealth enemyHealth;        // Reference to this enemy's health.
+        NavMeshAgent nav;               // Reference to the nav mesh agent.
+
+        float minDistance = 300;
+        /*Animator EnemyAnim;
+        bool EnemyMoving;*/
+        public float range = 150f;
+
+        TankMovement PlayerMovScript;
+        //public Transform Spawn;               // Reference to the spawn's position.
+        float nearDistance;
+
+        void Awake()
+        {
+            // Set up the references.
+
+            //player = GameObject.Find("Player").transform;
+            //playerHealth  = players.GetComponent<TankHealth>();
+            enemyHealth = GetComponent<NPCHealth>();
+            nav = GetComponent<NavMeshAgent>();
+
+            //EnemyAnim = GetComponent<Animator>();
+
+            PlayerMovScript = FindObjectOfType<TankMovement>();
+
+        }
+        /*public Transform nearTank()
+        {
+            Transform closestTank;
+            float minDistance =300;
+
+            for(int i=0; i < players.Length; i++)
+            {
+                float distance= Vector3.Distance(players[i].position, transform.position);
+                if (distance < minDistance) { closestTank = players[i]; }
+            }
+            return closestTank.transform;
+        }*/
+        private void FixedUpdate()
+        {
+            
+            /*for (int i = 0; i < players.Length; i++)
+            {
+                float distance = Vector3.Distance(players[i].position, transform.position);
+                if (distance < minDistance) { closestTank = players[i]; }
+            }*/
+            
+                float distanceTank1 = Vector3.Distance(players[0].position, transform.position);
+                float distanceTank2 = Vector3.Distance(players[1].position, transform.position);
+
+                if (distanceTank1 < distanceTank2) 
+                { 
+                    nearDistance = distanceTank1;
+                    closestTank = players[1];
+                }
+
+                else 
+                { 
+                    nearDistance = distanceTank2;
+                    closestTank = players[1];
+
+
+                }
+            
+
+            if (nearDistance <= range)
+            {
+                nav.SetDestination(closestTank.position);
+            }
+            //Transform closePlayer = nearTank();
+            //float PlayerDist = Vector3.Distance(closestTank.position, transform.position);
+
+            //nav.SetDestination(closestTank.position);
+            
+        }
+        /*void Update()
+
+        {
+            
+            float minDistance = 300;
+
+            for (int i = 0; i < players.Length; i++)
+            {
+                float distance = Vector3.Distance(players[i].position, transform.position);
+                if (distance < minDistance) { closestTank = players[i]; }
+            }
+
+            //Transform closePlayer = nearTank();
+            float PlayerDist = Vector3.Distance(closestTank.position, transform.position);
+            nav.SetDestination(closestTank.position);
+            /*float SpawnDist = Vector3.Distance(Spawn.position, transform.position);*/
+            //print(dist);
+            /*if (enemyHealth.currentHealth > 0 /*&& playerHealth.m_CurrentHealth > 0)
+            {
+                if (!PlayerMovScript.PlayerIsSafe)  //If the Player is not in the safe zone...
+                {
+                    if (PlayerDist <= range) //Chase player
+                    {
+                        //EnemyMoving = true;
+                        nav.SetDestination(closestTank.position);
+                    }
+                    else
+                    {
+                        //nav.Stop();
+                        //EnemyMoving = false;
+                    }
+                }
+                else // If the Player is in the safe zone...
+                {
+                    //goToSpawn(SpawnDist);
+                }
+            }*/
+            //EnemyAnim.SetBool("InRange", EnemyMoving);
+
+            // If the enemy and the player have health left...
+
+            /*if (enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0)
+            {
+                // ... set the destination of the nav mesh agent to the player.
+                nav.SetDestination(player.position);
+            }
+            // Otherwise...
+            else
+            {
+                // ... disable the nav mesh agent.
+                nav.enabled = false;
+            }*/
+
+        }
+
+        /*void goToSpawn(float d)
+        {
+            nav.SetDestination(Spawn.position);
+            if (d < 3)
+            {
+                //EnemyMoving = false;
+            }
+        }*/
+        /*
         public int m_PlayerNumber = 1;              // Used to identify which tank belongs to which player.  This is set by this tank's manager.
         public float m_Speed = 12f;                 // How fast the tank moves forward and back.
         public float m_TurnSpeed = 180f;            // How fast the tank turns in degrees per second.
@@ -20,7 +163,6 @@ namespace Complete
         private float m_OriginalPitch;              // The pitch of the audio source at the start of the scene.
         private ParticleSystem[] m_particleSystems; // References to all the particles systems used by the Tanks
 
-        public bool PlayerIsSafe=false;
         private void Awake ()
         {
             m_Rigidbody = GetComponent<Rigidbody> ();
@@ -112,7 +254,7 @@ namespace Complete
         private void FixedUpdate ()
         {
             // Adjust the rigidbodies position and orientation in FixedUpdate.
-            Move ();
+            /*Move ();
             Turn ();
         }
 
@@ -138,5 +280,6 @@ namespace Complete
             // Apply this rotation to the rigidbody's rotation.
             m_Rigidbody.MoveRotation (m_Rigidbody.rotation * turnRotation);
         }
-    }
+    }*/
+    
 }
