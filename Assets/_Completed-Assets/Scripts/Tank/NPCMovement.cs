@@ -34,6 +34,30 @@ namespace Complete
             PlayerMovScript = FindObjectOfType<TankMovement>();
 
         }
+        void checkPositions()
+        {
+            float distanceTank0 = Vector3.Distance(players[0].position, transform.position);
+            float distanceTank2 = Vector3.Distance(players[1].position, transform.position);
+
+            if (distanceTank0 < distanceTank2)
+            {
+                nearDistance = distanceTank0;
+                closestTank = players[0];
+            }
+
+            else if (distanceTank0 > distanceTank2)
+            {
+                nearDistance = distanceTank2;
+                closestTank = players[1];
+            }
+
+
+            print("Distancia Tanque 0:"+ distanceTank0+
+
+            "\nDistancia Tanque 1:"+ distanceTank2+
+
+            "\nEl tanque más cercano es: " + closestTank.name);
+        }
         /*public Transform nearTank()
         {
             Transform closestTank;
@@ -48,40 +72,30 @@ namespace Complete
         }*/
         private void FixedUpdate()
         {
-            
+
             /*for (int i = 0; i < players.Length; i++)
             {
                 float distance = Vector3.Distance(players[i].position, transform.position);
                 if (distance < minDistance) { closestTank = players[i]; }
             }*/
-            
-                float distanceTank1 = Vector3.Distance(players[0].position, transform.position);
-                float distanceTank2 = Vector3.Distance(players[1].position, transform.position);
-
-                if (distanceTank1 < distanceTank2) 
-                { 
-                    nearDistance = distanceTank1;
-                    closestTank = players[1];
-                }
-
-                else 
-                { 
-                    nearDistance = distanceTank2;
-                    closestTank = players[1];
-
-
-                }
-            
+            checkPositions();
 
             if (nearDistance <= range)
             {
+                nav.isStopped = false;
+
                 nav.SetDestination(closestTank.position);
+            }
+            else
+            {
+                //nav.Stop();
+                nav.isStopped = true;
             }
             //Transform closePlayer = nearTank();
             //float PlayerDist = Vector3.Distance(closestTank.position, transform.position);
 
             //nav.SetDestination(closestTank.position);
-            
+
         }
         /*void Update()
 
